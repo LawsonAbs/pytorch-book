@@ -12,7 +12,7 @@ class DefaultConfig(object):
     load_model_path = None  # 加载预训练的模型的路径，为None代表不加载
 
     batch_size = 32  # batch size
-    use_gpu = True  # user GPU or not
+    use_gpu = False  # user GPU or not  => 【L:这个地方默认的是True, 但是没有GPU的话得进行修改】
     num_workers = 4  # how many workers for loading data
     print_freq = 20  # print info every N batch
 

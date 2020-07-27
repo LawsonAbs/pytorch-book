@@ -20,8 +20,9 @@ def test(**kwargs):
         model.load(opt.load_model_path)
     model.to(opt.device)
 
-    # data
-    train_data = DogCat(opt.test_data_root,test=True)
+    # data  => 【Lawson:感觉是有问题的，这里的train，为啥后来对应成了opt.test_data_root？？】
+    #train_data = DogCat(opt.test_data_root,test=True)
+    train_data = DogCat(opt.train_data_root, test=True)
     test_dataloader = DataLoader(train_data,batch_size=opt.batch_size,shuffle=False,num_workers=opt.num_workers)
     results = []
     for ii,(data,path) in tqdm(enumerate(test_dataloader)):
@@ -29,7 +30,7 @@ def test(**kwargs):
         score = model(input)
         probability = t.nn.functional.softmax(score,dim=1)[:,0].detach().tolist()
         # label = score.max(dim = 1)[1].detach().tolist()
-        
+
         batch_results = [(path_.item(),probability_) for path_,probability_ in zip(path,probability) ]
 
         results += batch_results

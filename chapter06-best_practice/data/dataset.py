@@ -9,7 +9,7 @@ from torchvision import transforms as T
 基本原理：
 01.使用DataSet封装数据集，再使用Dataloader实现数据并行加载
 '''
-class DogCat(data.Dataset):
+class DogCat(data.Dataset): # 【继承自data.Dataset】
 
     def __init__(self, root, transforms=None, train=True, test=False):
         """

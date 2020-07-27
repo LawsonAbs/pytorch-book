@@ -82,7 +82,7 @@ id,label
 
 数据的相关处理主要保存在`data/dataset.py`中。关于数据加载的相关操作，在上一章中我们已经提到过，其基本原理就是使用`Dataset`提供数据集的封装，再使用`Dataloader`实现数据并行加载。Kaggle提供的数据包括训练集和测试集，而我们在实际使用中，还需专门从训练集中取出一部分作为验证集。对于这三类数据集，其相应操作也不太一样，而如果专门写三个`Dataset`，则稍显复杂和冗余，因此这里通过加一些判断来区分。对于训练集，我们希望做一些数据增强处理，如随机裁剪、随机翻转、加噪声等，而验证集和测试集则不需要。下面看`dataset.py`的代码：
 
-```python
+```py
 import os
 from PIL import Image
 from torch.utils import data
