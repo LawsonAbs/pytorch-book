@@ -1,42 +1,47 @@
 #coding:utf8
-from config import opt
+from config import opt  #直接从config文件中导入opt这个变量
 import os
 import torch as t
-import models
+import models  # 导入models 这个包（package）
 from data.dataset import DogCat
 from torch.utils.data import DataLoader
 from torchnet import meter
 from utils.visualize import Visualizer
 from tqdm import tqdm
 
-
+"""
+这个test()会在 pytest in main.py 这个程序中调用。
+因为训练的时间比较久，所以会转圈。
+但是我这里注释掉以前的代码，直接输出"this is test program"就会发现很快就能把test执行完毕
+"""
 @t.no_grad() # pytorch>=0.5
 def test(**kwargs):
-    opt._parse(kwargs)
-
-    # configure model
-    model = getattr(models, opt.model)().eval()
-    if opt.load_model_path:
-        model.load(opt.load_model_path)
-    model.to(opt.device)
-
-    # data  => 【Lawson:感觉是有问题的，这里的train，为啥后来对应成了opt.test_data_root？？】
-    #train_data = DogCat(opt.test_data_root,test=True)
-    train_data = DogCat(opt.train_data_root, test=True)
-    test_dataloader = DataLoader(train_data,batch_size=opt.batch_size,shuffle=False,num_workers=opt.num_workers)
-    results = []
-    for ii,(data,path) in tqdm(enumerate(test_dataloader)):
-        input = data.to(opt.device)
-        score = model(input)
-        probability = t.nn.functional.softmax(score,dim=1)[:,0].detach().tolist()
-        # label = score.max(dim = 1)[1].detach().tolist()
-
-        batch_results = [(path_.item(),probability_) for path_,probability_ in zip(path,probability) ]
-
-        results += batch_results
-    write_csv(results,opt.result_file)
-
-    return results
+    print("this is test program ")
+    # opt._parse(kwargs)
+    #
+    # # configure model
+    # model = getattr(models, opt.model)().eval()
+    # if opt.load_model_path:
+    #     model.load(opt.load_model_path)
+    # model.to(opt.device)
+    #
+    # # data  => 【Lawson:感觉是有问题的，这里的train，为啥后来对应成了opt.test_data_root？？】
+    # #train_data = DogCat(opt.test_data_root,test=True)
+    # train_data = DogCat(opt.train_data_root, test=True)
+    # test_dataloader = DataLoader(train_data,batch_size=opt.batch_size,shuffle=False,num_workers=opt.num_workers)
+    # results = []
+    # for ii,(data,path) in tqdm(enumerate(test_dataloader)):
+    #     input = data.to(opt.device)
+    #     score = model(input)
+    #     probability = t.nn.functional.softmax(score,dim=1)[:,0].detach().tolist()
+    #     # label = score.max(dim = 1)[1].detach().tolist()
+    #
+    #     batch_results = [(path_.item(),probability_) for path_,probability_ in zip(path,probability) ]
+    #
+    #     results += batch_results
+    # write_csv(results,opt.result_file)
+    #
+    # return results
 
 def write_csv(results,file_name):
     import csv
@@ -85,13 +90,11 @@ def train(**kwargs):
             input = data.to(opt.device)
             target = label.to(opt.device)
 
-
             optimizer.zero_grad()
             score = model(input)
             loss = criterion(score,target)
             loss.backward()
             optimizer.step()
-            
             
             # meters update and visualize
             loss_meter.add(loss.item())
@@ -102,10 +105,10 @@ def train(**kwargs):
                 vis.plot('loss', loss_meter.value()[0])
                 
                 # 进入debug模式
+                # 即每次迭代训练到这里的时候就会进入debug 模式
                 if os.path.exists(opt.debug_file):
                     import ipdb;
                     ipdb.set_trace()
-
 
         model.save()
 
@@ -163,4 +166,4 @@ def help():
 
 if __name__=='__main__':
     import fire
-    fire.Fire()
+    fire.Fire()  # 会直接进入train()函数

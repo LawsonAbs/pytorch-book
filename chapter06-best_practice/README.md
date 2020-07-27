@@ -43,10 +43,3 @@ python main.py help
 ```
 python main.py test --data-root=./data/test  --batch-size=256 --load-path='checkpoints/squeezenet.pth'
 ```
-
-
-
---------
-【20200727】
-
-
