@@ -1,7 +1,6 @@
-## [English Version](README_EN.md)
-
-
-这是书籍《深度学习框架PyTorch：入门与实践》的对应代码，但是也可以作为一个独立的PyTorch入门指南和教程。
+这是陈云老师所著书籍《深度学习框架PyTorch：入门与实践》的对应代码，但是也可以作为一个独立的PyTorch入门指南和教程。
+我（lawson）对其做了一些注释和修改，用于理解和使用深度学习。
+>陈云老师的原仓库链接：https://github.com/chenyuntc/pytorch-book
 
 ## 更新说明
 Working on migration to Pytorch 1.0, stay tuned!
@@ -34,13 +33,6 @@ Working on migration to Pytorch 1.0, stay tuned!
 
  **Notebook中的文字描述内容属于本书的初稿，有描述不通顺，错别字之处还请谅解**。本打算删除notebook中描述的内容，只留下代码，但为了方便读者阅读学习，最终还是决定留下。 我会抽空根据书中内容逐字校对这部分内容，但并不对此并不提供具体时间点。
 
-## 是否需要买书
-
-书**不是必要的**，这个仓库包含书中50%以上的文字内容，90%以上的代码，尤其是前几章入门内容，几乎是完全保留了书中的讲解内容。读者即使不买书也能正常使用本教程。
-
-~~如果你觉得纸质书的优势吸引你，不妨小破费一笔，支持一下作者这大半年来的工作。同时为了尽可能的方便读者，笔者还专门开通腾讯云的服务，用以保存教程中用到的部分模型，预处理的数据和部分大文件。~~
-书中的部分内容已经过时，以此仓库内容为准。
-
 ## 代码说明
 
 - 代码主要在python3下测试得到最终结果，python2暂未测试。v0.2和v0.3 分支的代码同时经过严格测试支持python2/python3
@@ -69,23 +61,3 @@ git checkout v0.2 # v0.3
    ```python
    cd pytorch-book && pip install -r requirements.txt
    ```
-
-## Visdom打不开及其解决方案
-**新版的visdom已经解决了这个问题,只需要升级即可**
-```
-pip install --upgrade visdom
-```
-之前的[解决方案](https://github.com/chenyuntc/pytorch-book/blob/2c8366137b691aaa8fbeeea478cc1611c09e15f5/README.md#visdom%E6%89%93%E4%B8%8D%E5%BC%80%E5%8F%8A%E5%85%B6%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88) 不再需要，已删除。
-
-## ^_^
-
-有任何bug，解释不清楚的地方或者是困惑，欢迎开issue
-
-欢迎pull requests
-
-Happy Coding!
-
-![](http://img14.360buyimg.com/n1/jfs/t13339/32/2463730198/217483/e8148c6b/5a41277dNbd1470c1.jpg)
-
-- [京东购买链接](https://search.jd.com/Search?keyword=pytorch%20入门与实践&enc=utf-8&wq=pytorch%20入门与实践&pvid=8b0d91d7108845ad8cbaf596326f3eb3)
-- [当当购买链接](http://search.dangdang.com/?key=pytorch%20%C8%EB%C3%C5%D3%EB%CA%B5%BC%F9&act=input)
