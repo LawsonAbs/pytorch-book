@@ -1,0 +1,5 @@
+chapter06-best_practice/__pycache__/
+chapter06-best_practice/checkpoints/
+chapter06-best_practice/data/__pycache__/
+chapter06-best_practice/models/__pycache__/
+chapter06-best_practice/utils/__pycache__/
