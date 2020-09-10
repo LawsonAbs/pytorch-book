@@ -1,3 +1,6 @@
+"""
+数据的相关处理放在dataset.py这个函数中
+"""
 # coding:utf8
 import os
 from PIL import Image
