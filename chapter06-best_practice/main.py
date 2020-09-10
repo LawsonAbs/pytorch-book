@@ -1,5 +1,5 @@
 #coding:utf8
-from config import opt
+from config import opt  # 注意这里因为是在config.py 文件中已经实例化了，这里只导入一下
 import os
 import torch as t
 import models
@@ -10,34 +10,6 @@ from utils.visualize import Visualizer
 from tqdm import tqdm
 
 
-@t.no_grad() # pytorch>=0.5
-def test(**kwargs):
-    opt._parse(kwargs)
-
-    # configure model
-    model = getattr(models, opt.model)().eval()
-    if opt.load_model_path:
-        model.load(opt.load_model_path)
-    model.to(opt.device)
-
-    # data  => 【Lawson:感觉是有问题的，这里的train，为啥后来对应成了opt.test_data_root？？】
-    #train_data = DogCat(opt.test_data_root,test=True)
-    train_data = DogCat(opt.train_data_root, test=True)
-    test_dataloader = DataLoader(train_data,batch_size=opt.batch_size,shuffle=False,num_workers=opt.num_workers)
-    results = []
-    for ii,(data,path) in tqdm(enumerate(test_dataloader)):
-        input = data.to(opt.device)
-        score = model(input)
-        probability = t.nn.functional.softmax(score,dim=1)[:,0].detach().tolist()
-        # label = score.max(dim = 1)[1].detach().tolist()
-
-        batch_results = [(path_.item(),probability_) for path_,probability_ in zip(path,probability) ]
-
-        results += batch_results
-    write_csv(results,opt.result_file)
-
-    return results
-
 def write_csv(results,file_name):
     import csv
     with open(file_name,'w') as f:
@@ -46,11 +18,14 @@ def write_csv(results,file_name):
         writer.writerows(results)
     
 def train(**kwargs):
-    opt._parse(kwargs)
-    vis = Visualizer(opt.env,port = opt.vis_port)
+    opt._parse(kwargs)  # 更新一下参数
+    vis = Visualizer(opt.env,port = opt.vis_port) # 设置visdom 相关
 
     # step1: configure model
+    # getattr 函数的作用是获取某个对象的属性值
+    print(type(models))
     model = getattr(models, opt.model)()
+    print(type(model)) # 得到的model是个 class 类型，很奇怪，竟然这么样也可以得到一个类
     if opt.load_model_path:
         model.load(opt.load_model_path)
     model.to(opt.device)
@@ -75,17 +50,14 @@ def train(**kwargs):
 
     # train
     for epoch in range(opt.max_epoch):
-        
+        print("epoch:", epoch," ",end="")  # 打印epoch信息
         loss_meter.reset()
         confusion_matrix.reset()
 
         for ii,(data,label) in tqdm(enumerate(train_dataloader)):
-
             # train model 
             input = data.to(opt.device)
             target = label.to(opt.device)
-
-
             optimizer.zero_grad()
             score = model(input)
             loss = criterion(score,target)
@@ -106,7 +78,6 @@ def train(**kwargs):
                     import ipdb;
                     ipdb.set_trace()
 
-
         model.save()
 
         # validate and visualize
@@ -114,7 +85,11 @@ def train(**kwargs):
 
         vis.plot('val_accuracy',val_accuracy)
         vis.log("epoch:{epoch},lr:{lr},loss:{loss},train_cm:{train_cm},val_cm:{val_cm}".format(
-                    epoch = epoch,loss = loss_meter.value()[0],val_cm = str(val_cm.value()),train_cm=str(confusion_matrix.value()),lr=lr))
+                    epoch = epoch,
+            loss = loss_meter.value()[0],
+            val_cm = str(val_cm.value()),
+            train_cm=str(confusion_matrix.value()),
+            lr=lr))
         
         # update learning rate
         if loss_meter.value()[0] > previous_loss:          
@@ -122,7 +97,6 @@ def train(**kwargs):
             # 第二种降低学习率的方法:不会有moment等信息的丢失
             for param_group in optimizer.param_groups:
                 param_group['lr'] = lr
-        
 
         previous_loss = loss_meter.value()[0]
 
